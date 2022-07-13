@@ -1,0 +1,27 @@
+.App {
+  font-family: sans-serif;
+  /* text-align: center; */
+}
+.spinner-grow {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}
+.overlay {
+  background: rgba(0, 0, 0, 0.6);
+  color: #666666;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 5000;
+  top: 0;
+  left: 0;
+  float: left;
+  text-align: center;
+  padding-top: 25%;
+}
+.fa-shopping-cart {
+  color: #fff;
+  font-size: 24px;
+  vertical-align: -webkit-baseline-middle;
+}
