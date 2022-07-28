@@ -25,3 +25,13 @@
   font-size: 24px;
   vertical-align: -webkit-baseline-middle;
 }
+.form-error .input-error,
+.input-error {
+  color: red;
+}
+.title_form {
+  background: #24749d;
+  padding: 10px;
+  color: #fff;
+  border-radius: 3px;
+}

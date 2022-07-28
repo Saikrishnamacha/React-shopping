@@ -16,6 +16,9 @@ const Cart = () => {
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
+  const removeCartItemHandler = (item) => {
+    cartCtx.removeCartItem({ ...item });
+  };
   return (
     <div className="container mt-5">
       <div className="row">
@@ -64,7 +67,19 @@ const Cart = () => {
                         +
                       </button>
                     </td>
-                    <td>{item.amountSum}</td>
+                    <td>
+                      {item.amountSum}
+                      <i
+                        className="fa fa-trash"
+                        aria-hidden="true"
+                        style={{
+                          float: "right",
+                          margin: "3px",
+                          cursor: "pointer",
+                        }}
+                        onClick={removeCartItemHandler.bind(null, item)}
+                      ></i>
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -1,8 +1,10 @@
 import { useEffect, useReducer } from "react";
 import CartContext from "./CartContext";
 const initialState = {
-  items: JSON.parse(localStorage.getItem("cart")) || [],
-  totalAmount: JSON.parse(localStorage.getItem("totalAmount")) || 0,
+  items: [],
+  totalAmount: 0,
+  isLoggedIn: false,
+  user: "",
 };
 const reducer = (state, action) => {
   if (action.type === "ADD") {
@@ -28,6 +30,8 @@ const reducer = (state, action) => {
     return {
       items: updatedItems,
       totalAmount: updatedTotalAmount,
+      isLoggedIn: state.isLoggedIn,
+      user: state.user,
     };
   }
   if (action.type === "REMOVE") {
@@ -55,18 +59,62 @@ const reducer = (state, action) => {
     return {
       items: updatedItems,
       totalAmount: updatedTotalAmount,
+      isLoggedIn: state.isLoggedIn,
+      user: state.user,
+    };
+  }
+  if (action.type === "LOGIN") {
+    state.isLoggedIn = true;
+    let userName = action.user.email;
+    let name = userName.substring(0, userName.indexOf("@"));
+    state.user = name;
+    return {
+      items: state.items,
+      totalAmount: state.totalAmount,
+      isLoggedIn: state.isLoggedIn,
+      user: state.user,
+    };
+  }
+  if (action.type === "LOGOUT") {
+    state.isLoggedIn = false;
+    // state.items = [];
+    // state.totalAmount = 0;
+    return {
+      items: state.items,
+      totalAmount: state.totalAmount,
+      isLoggedIn: state.isLoggedIn,
+      user: state.user,
+    };
+  }
+  if (action.type === "REMOVE_CARTITEM") {
+    let updatedItems = state.items.filter((item) => {
+      return item.id !== action.item.id;
+    });
+    const updatedTotalAmount =
+      state.totalAmount - action.item.price * action.item.amount;
+    return {
+      items: updatedItems,
+      totalAmount: updatedTotalAmount,
+      isLoggedIn: state.isLoggedIn,
+      user: state.user,
     };
   }
   return initialState;
 };
 const CartProvider = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(state.items));
-  }, [state.items]);
-  useEffect(() => {
-    localStorage.setItem("totalAmount", JSON.stringify(state.totalAmount));
-  }, [state.totalAmount]);
+  // useEffect(() => {
+  //   localStorage.setItem("cart", JSON.stringify(state.items));
+  // }, [state.items]);
+  // useEffect(() => {
+  //   localStorage.setItem("totalAmount", JSON.stringify(state.totalAmount));
+  // }, [state.totalAmount]);
+  // useEffect(() => {
+  //   localStorage.setItem("UserLogin", JSON.stringify(state.isLoggedIn));
+  // }, [state.isLoggedIn]);
+  // useEffect(() => {
+  //   localStorage.setItem("UserEmail", JSON.stringify(state.user));
+  // }, [state.user]);
   const addItemHandler = (item) => {
     dispatch({
       type: "ADD",
@@ -79,6 +127,23 @@ const CartProvider = (props) => {
       item: item,
     });
   };
+  const loginHandler = (user) => {
+    dispatch({
+      type: "LOGIN",
+      user: user,
+    });
+  };
+  const logOutHandler = () => {
+    dispatch({
+      type: "LOGOUT",
+    });
+  };
+  const cartRemoveItem = (item) => {
+    dispatch({
+      type: "REMOVE_CARTITEM",
+      item: item,
+    });
+  };
   return (
     <CartContext.Provider
       value={{
@@ -86,6 +151,11 @@ const CartProvider = (props) => {
         totalAmount: state.totalAmount,
         addItem: addItemHandler,
         removeItem: removeItemHandler,
+        login: loginHandler,
+        logout: logOutHandler,
+        isLoggedIn: state.isLoggedIn,
+        user: state.user,
+        removeCartItem: cartRemoveItem,
       }}
     >
       {props.children}
