@@ -6,11 +6,15 @@ const Nav = () => {
   const numberOfCartItems = cartCtx.items.reduce((total, item) => {
     return total + item.amount;
   }, 0);
+  const logOutHandler = () => {
+    debugger;
+    cartCtx.logout();
+  };
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/home">
-          Logo
+          MyShop
         </Link>
         <button
           className="navbar-toggler"
@@ -34,6 +38,37 @@ const Nav = () => {
               <NavLink className="nav-link" to="/products">
                 Products
               </NavLink>
+            </li>
+            {cartCtx.isLoggedIn && (
+              <li>
+                <NavLink className="nav-link" to="/profile">
+                  <i className="fa fa-user" style={{ padding: "0 5px" }} />{" "}
+                  {cartCtx.user}
+                </NavLink>
+              </li>
+            )}
+            <li className="nav-item">
+              {!cartCtx.isLoggedIn && (
+                <NavLink className="nav-link" to="/login">
+                  Login |
+                </NavLink>
+              )}
+              {cartCtx.isLoggedIn && (
+                <NavLink
+                  className="nav-link"
+                  to="/home"
+                  onClick={logOutHandler}
+                >
+                  Logout
+                </NavLink>
+              )}
+            </li>
+            <li className="nav-item">
+              {!cartCtx.isLoggedIn && (
+                <NavLink className="nav-link" to="/register">
+                  Register
+                </NavLink>
+              )}
             </li>
             <li>
               <Link to="/cart">
